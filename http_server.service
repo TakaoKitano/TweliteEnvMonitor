@@ -1,0 +1,11 @@
+[Unit]
+Description = twelite env monitor daemon
+
+[Service]
+ExecStart = /home/pi/TweliteEnvMonitor/web/http_server.py
+WorkingDirectory=/home/pi/TweliteEnvMonitor/web
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target

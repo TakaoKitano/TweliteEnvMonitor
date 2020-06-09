@@ -12,7 +12,7 @@ import shutil
 from device_utils import find_port
 from device_utils import read_port
 
-LOG_DIR = "/var/tmp/twelite/"
+LOG_DIR = "/var/tmp"
 FILENAME_MASTER = os.path.join(LOG_DIR, "master.json")
 FILENAME_TMP = os.path.join(LOG_DIR, "master.tmp")
 
@@ -24,7 +24,6 @@ def main():
         sys.exit()
 
     master = {}
-    os.makedirs(LOG_DIR, exist_ok=True)
     while True:
         #
         # update master

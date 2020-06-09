@@ -23,7 +23,7 @@ HUMIDITY_READKEY=properties.AmbientKeys['HUMIDITY_READKEY']
 Labels = {'51AB':'d1','226F':'d2','512B':'d3'}
 
 def main():
-    FILE_PATH = "/var/tmp/twelite/master.json"
+    FILE_PATH = "/var/tmp/master.json"
     with  open(FILE_PATH, "r") as file:
         master = json.load(file)
         print(master)  

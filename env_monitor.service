@@ -1,0 +1,10 @@
+[Unit]
+Description = twelite env monitor daemon
+
+[Service]
+ExecStart = /home/pi/TweliteEnvMonitor/env_monitor.py
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
