@@ -35,7 +35,7 @@ def figure_out_device_name():
 # https://mono-wireless.com/jp/products/TWE-APPS/App_pal/parent.html
 # parse raw data like this
 def parse_data(raw):
-    print("parse_data=", raw)
+    #print("parse_data=", raw)
     router = raw[1:9]             
     lqi = int(raw[9:11],16)    
     sequence = int(raw[11:15],16) 

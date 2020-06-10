@@ -17,7 +17,7 @@ def main():
     port = find_port()
     if not port:
         print("no FTDI USB serial device found")
-        time.sleep(5)	
+        time.sleep(30)	
         sys.exit()
 
     master = {}
@@ -26,7 +26,7 @@ def main():
         # update master
         #
         nodename, nodedata = read_port(port)
-        print(nodename, ':', nodedata)
+        #print(nodename, ':', nodedata)
         if nodename in master:
             #
             # if we already have a same sequence data, 

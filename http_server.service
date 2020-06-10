@@ -6,6 +6,8 @@ ExecStart = /home/pi/TweliteEnvMonitor/web/http_server.py
 WorkingDirectory=/home/pi/TweliteEnvMonitor/web
 Restart = always
 Type = simple
+User=pi
+Group=pi
 
 [Install]
 WantedBy = multi-user.target
