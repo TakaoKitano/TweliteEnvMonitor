@@ -5,6 +5,8 @@ Description = twelite env monitor daemon
 ExecStart = /home/pi/TweliteEnvMonitor/env_monitor.py
 Restart = always
 Type = simple
+User=pi
+Group=pi
 
 [Install]
 WantedBy = multi-user.target

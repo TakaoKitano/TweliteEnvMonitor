@@ -2,7 +2,6 @@
 #
 # env_monitor.py: read from the TWE-Lite wireless temperature sensor and store the values
 #
-
 import time
 import datetime
 import os
@@ -12,9 +11,7 @@ import shutil
 from device_utils import find_port
 from device_utils import read_port
 
-LOG_DIR = "/var/tmp"
-FILENAME_MASTER = os.path.join(LOG_DIR, "master.json")
-FILENAME_TMP = os.path.join(LOG_DIR, "master.tmp")
+import appenv
 
 def main():
     port = find_port()
@@ -43,11 +40,12 @@ def main():
         #
         # update master file
         # As master.json could be accessed by other process, 
-        # we need atomic file change
+        # we need an atomic file update
         # 
-        with open(FILENAME_TMP, "w") as f:
-            json.dump(master, f, indent=2)
-        shutil.move(FILENAME_TMP, FILENAME_MASTER)
+        tmpfile = appenv.FILENAME_MASTER + ".tmp"
+        with open(tmpfile, "w") as f:
+            json.dump(master, f, indent=4)
+        shutil.move(tmpfile, appenv.FILENAME_MASTER)
 
 if __name__ == '__main__':
     main()

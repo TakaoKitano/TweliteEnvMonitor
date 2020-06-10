@@ -7,52 +7,66 @@
 import os,sys
 import json
 import requests
-import properties
 import time
 import ambient
 from datetime import datetime
 from datetime import timedelta
+import appenv
 
-TEMPERATURE_CHANNELID=properties.AmbientKeys['TEMPERATURE_CHANNELID']
-TEMPERATURE_WRITEKEY=properties.AmbientKeys['TEMPERATURE_WRITEKEY']
-TEMPERATURE_READKEY=properties.AmbientKeys['TEMPERATURE_READKEY']
-HUMIDITY_CHANNELID=properties.AmbientKeys['HUMIDITY_CHANNELID']
-HUMIDITY_WRITEKEY=properties.AmbientKeys['HUMIDITY_WRITEKEY']
-HUMIDITY_READKEY=properties.AmbientKeys['HUMIDITY_READKEY']
+#
+# load channel data
+#
+def get_channels():
+    filepath = appenv.AMBIENT_CHANNELS
+    channels = []
+    with  open(filepath, "r") as file:
+        channels = json.load(file)
+        for channel in channels:
+            print("channelid={}".format(channel['channelid']))  
+            print("writekey={}".format(channel['writekey']))  
+            print("labels={}".format(channel['labels']))  
+    return channels
 
-Labels = {'51AB':'d1','226F':'d2','512B':'d3'}
+#
+# construct data to be upload for the specified channel 
+#
+def construct_upload_data(master, channel):
+    now = datetime.now()
+    upload = {'created': now.strftime('%Y-%m-%d %H:%M:%S')}
+    for nodename in master:
+        labels = channel['labels']
+        if nodename+'_temperature' in labels:
+            node = master[nodename]
+            key_temperature = labels[nodename+'_temperature']
+            key_humidity = labels[nodename+'_humidity']
+            #
+            # check if datetime is up to date
+            #
+            minutes_ago = now - timedelta(minutes=5)
+            dt = datetime.strptime(node['datetime'], '%Y-%m-%d %H:%M:%S')
+            if dt > minutes_ago:
+                upload[key_temperature] = node['temperature']
+                upload[key_humidity] = node['humidity']
+            else:
+                print(nodename, 'is not working since ', node['datetime'])
+    return upload
+
+def upload(channel, data):
+    print("sending...", data)
+    am = ambient.Ambient(channel['channelid'], channel['writekey'])
+    am.send(data)
 
 def main():
-    FILE_PATH = "/var/tmp/master.json"
-    with  open(FILE_PATH, "r") as file:
+    with  open(appenv.FILENAME_MASTER, "r") as file:
         master = json.load(file)
         print(master)  
 
-        now = datetime.now()
+        channels = get_channels()
+        for channel in channels:
+            data = construct_upload_data(master, channel)
+            upload(channel, data)
+            time.sleep(5)
 
-        temperatures = {'created': now.strftime('%Y-%m-%d %H:%M:%S')}
-        humidities = {'created':  now.strftime('%Y-%m-%d %H:%M:%S')}
-        for nodename in master:
-            if nodename in Labels:
-                node = master[nodename]
-                label = Labels[nodename]
-                #
-                # check if datetime is up to date
-                #
-                minutes_ago = now - timedelta(minutes=5)
-                dt = datetime.strptime(node['datetime'], '%Y-%m-%d %H:%M:%S')
-                if dt > minutes_ago:
-                    temperatures[label] = node['temperature']
-                    humidities[label] = node['humidity']
-                else:
-                    print(nodename, 'is not working since ', node['datetime'])
-        print("sending...", temperatures)
-        am = ambient.Ambient(TEMPERATURE_CHANNELID, TEMPERATURE_WRITEKEY)
-        am.send(temperatures)
-        time.sleep(5)
-        print("sending...", humidities)
-        am = ambient.Ambient(HUMIDITY_CHANNELID, HUMIDITY_WRITEKEY)
-        am.send(humidities)
 
 if __name__ == '__main__':
-  main()
+    main()
