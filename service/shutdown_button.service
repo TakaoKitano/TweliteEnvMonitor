@@ -1,0 +1,10 @@
+[Unit]
+Description = twelite monitor shutdown botton support
+
+[Service]
+ExecStart = /home/pi/TweliteEnvMonitor/shutdown_button.py
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
