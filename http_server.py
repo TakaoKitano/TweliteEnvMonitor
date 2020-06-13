@@ -19,21 +19,21 @@ def app(environ, respond):
 
     if util.request_uri(environ).endswith("/request?cmd=reboot"):
         print("### reboot")
+        os.system("sudo reboot")
         respond('200 OK', [('Content-Type', 'application/json; charset=utf-8')])
         return [json.dumps({'message':'reboot requested'}).encode("utf-8")]
-        os.system("sudo reboot")
     if util.request_uri(environ).endswith("/request?cmd=shutdown"):
         print("### shutdown")
+        os.system("sudo shutdown -h now")
         respond('200 OK', [('Content-Type', 'application/json; charset=utf-8')])
         return [json.dumps({'message':'shutdown requested'}).encode("utf-8")]
-        os.system("sudo shutdown -h now")
     if util.request_uri(environ).endswith("/request?cmd=upgrade"):
         print("### upgrade")
         respond('200 OK', [('Content-Type', 'application/json; charset=utf-8')])
-        return [json.dumps({'message':'upgrade requested'}).encode("utf-8")]
         os.system("git pull origin master")
         os.system("cd config && git pull origin master && cd ..")
         os.system("sudo reboot")
+        return [json.dumps({'message':'upgrade requested'}).encode("utf-8")]
 
     name = environ['PATH_INFO'][1:]
     if name in filenames:
