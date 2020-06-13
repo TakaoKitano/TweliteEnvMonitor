@@ -14,13 +14,6 @@ filenames = {
     "channels.json": appenv.AMBIENT_CHANNELS
 }
 
-requests = {
-        "request?cmd=reboot": "reboot",
-        "request?cmd=shutdown": "shutdown",
-        "request?cmd=upgrade": "upgrad"
-}
-
-
 def app(environ, respond):
     print("request_uri=", util.request_uri(environ))
 
@@ -40,6 +33,7 @@ def app(environ, respond):
         return [json.dumps({'message':'upgrade requested'}).encode("utf-8")]
         os.system("git pull origin master")
         os.system("cd config && git pull origin master && cd ..")
+        os.system("sudo reboot")
 
     name = environ['PATH_INFO'][1:]
     if name in filenames:
