@@ -21,10 +21,6 @@ def get_channels():
     channels = []
     with  open(filepath, "r") as file:
         channels = json.load(file)
-        for channel in channels:
-            print("channelid={}".format(channel['channelid']))  
-            print("writekey={}".format(channel['writekey']))  
-            print("labels={}".format(channel['labels']))  
     return channels
 
 #
@@ -33,26 +29,17 @@ def get_channels():
 def construct_upload_data(master, channel):
     now = datetime.now()
     upload = {'created': now.strftime('%Y-%m-%d %H:%M:%S')}
-    for nodename in master:
-        labels = channel['labels']
-        if nodename+'_temperature' in labels:
-            node = master[nodename]
-            key_temperature = labels[nodename+'_temperature']
-            key_humidity = labels[nodename+'_humidity']
-            #
-            # check if datetime is up to date
-            #
-            minutes_ago = now - timedelta(minutes=5)
-            dt = datetime.strptime(node['datetime'], '%Y-%m-%d %H:%M:%S')
-            if dt > minutes_ago:
-                upload[key_temperature] = node['temperature']
-                upload[key_humidity] = node['humidity']
-            else:
-                print(nodename, 'is not working since ', node['datetime'])
+    for key in channel['data'].keys():
+        nodename = channel['data'][key]["node"]
+        typename = channel['data'][key]["type"]
+        if nodename in master:
+            upload[key] = master[nodename][typename]
     return upload
 
+#
+# upload to cloud
+#
 def upload(channel, data):
-    print("sending...", data)
     am = ambient.Ambient(channel['channelid'], channel['writekey'])
     am.send(data)
 
@@ -64,9 +51,9 @@ def main():
         channels = get_channels()
         for channel in channels:
             data = construct_upload_data(master, channel)
+            print(channel["title"], data)
             upload(channel, data)
-            time.sleep(5)
-
+            time.sleep(2)
 
 if __name__ == '__main__':
     main()

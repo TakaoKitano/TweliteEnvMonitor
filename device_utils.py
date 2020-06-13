@@ -49,6 +49,7 @@ def parse_data(raw):
             'battery':battery,
             'temperature':temperature,
             'humidity':humidity,
+            'signal':lqi,
             'route':{router:lqi}}}
 
 def read_serial_port(port):

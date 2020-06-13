@@ -35,6 +35,8 @@ def main():
             node = master[nodename]
             if node['sequence'] == nodedata['sequence']:
                 nodedata['route'].update(node['route'])
+                if nodedata['signal'] < node['signal']:
+                    nodedata['signal'] = node['signal']
         master[nodename] = nodedata
  
         #
