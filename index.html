@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>TweliteEnvMonitor web control</title>
+  <style>
+    body {
+      background: slategray;
+      margin: 10px;
+      padding: 10px;
+    }
+    button {
+      background: lightsteelblue;
+      margin: 5px;
+      padding: 5px;
+    }
+    button.admin {
+      background: red;
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h4>TweliteEnvMonitor web version 1.0 2020.06.12</h4>
+  <button id="reload">reload</button>
+  <br/>
+  <textarea readonly id="channels" rows="15" cols="80"></textarea>
+  <br/>
+  <textarea readonly id="master" rows="30" cols="80"></textarea>
+  <hr/>
+  <h4>administraion menu</h4>
+  <button id="reboot">reboot server </button>
+  <button id="shutdown">shutdown server</button>
+  <button id="upgrade">upgrade server software</button>
+<script>
+  var get_file = function (id, path) {
+	  var request = new XMLHttpRequest();
+	  request.open('GET', path, true);
+	  request.onload = function() {
+		  if (this.status >= 200 && this.status < 400) {
+			  try {
+				  const json = JSON.parse(this.response);
+				  const str = JSON.stringify(json, null, 4);
+				  document.getElementById(id).value = str
+			  } catch (error) {
+				  console.error("failed to parse master.json");
+				  const str = this.response;
+				  document.getElementById(id).value = str
+			  }
+		  } else {
+			  console.log( path + " server error");
+		  }
+	  };
+	  request.onerror = function () {
+		  console.log(path + " network error");
+	  };
+	  request.send();
+  }
+  var loadfiles = function() {
+	  get_file("master", "/master.json");
+	  get_file("channels", "/channels.json");
+  }
+
+  window.onload = function () {
+	  loadfiles();
+	  document.getElementById("reload").addEventListener("click", loadfiles);
+	  document.getElementById("reboot").addEventListener("click", function() {
+	  	var request = new XMLHttpRequest();
+	  	request.open('GET', '/request?cmd=reboot', true);
+	  	request.send();
+	  });
+	  document.getElementById("shutdown").addEventListener("click", function() {
+	  	var request = new XMLHttpRequest();
+	  	request.open('GET', '/request?cmd=shutdown', true);
+	  	request.send();
+	  });
+	  document.getElementById("upgrade").addEventListener("click", function() {
+	  	var request = new XMLHttpRequest();
+	  	request.open('GET', '/request?cmd=upgrade', true);
+	  	request.send();
+	  });
+  }
+</script>
+</body>
+</html>

@@ -2,8 +2,8 @@
 Description = twelite env monitor daemon
 
 [Service]
-ExecStart = /home/pi/TweliteEnvMonitor/web/http_server.py
-WorkingDirectory=/home/pi/TweliteEnvMonitor/web
+ExecStart = /home/pi/TweliteEnvMonitor/http_server.py
+WorkingDirectory=/home/pi/TweliteEnvMonitor
 Restart = always
 Type = simple
 User=pi
