@@ -6,7 +6,7 @@ APP_ROOT="/home/pi/TweliteEnvMonitor/"
 #
 # ambient channel information
 #
-AMBIENT_CHANNELS = APP_ROOT + "web/channels.json"
+AMBIENT_CHANNELS = APP_ROOT + "config/channels.json"
 
 #
 # master file position
