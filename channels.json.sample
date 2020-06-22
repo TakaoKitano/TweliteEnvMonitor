@@ -1,14 +1,13 @@
 [
 {
-  "channelid":"your_ambient_channel_id",
-  "writekey":"your_ambient_write_key",
-  "labels":{
-    "51AB_temperature":"d1",
-    "51AB_humidity":"d2",
-    "226F_temperature":"d3",
-    "226F_humidity":"d4",
-    "512B_temperature":"d5",
-    "512B_humidity":"d6"
+  "title":"test temperature",
+  "channelid":"your_channel_id",
+  "writekey":"your channel write key",
+  "data":{
+    "d1":{"node":"5198", "type":"temperature"},
+    "d2":{"node":"5198", "type":"humidity"},
+    "d3":{"node":"5198", "type":"battery"},
+    "d4":{"node":"5198", "type":"signal"}
   }
 }
 ]
