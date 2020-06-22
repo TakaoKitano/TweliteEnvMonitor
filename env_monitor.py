@@ -38,9 +38,9 @@ def main():
                 if nodedata['signal'] < mnode['signal']:
                     nodedata['signal'] = mnode['signal']
             else:
-                # update node : cancel noise
-                nodedata['temperature'] = round((mnode['temperature'] + nodedata['temperature'])/2, 2)
-                nodedata['humidity'] = round((mnode['humidity'] + nodedata['humidity'])/2, 2)
+                # update node - cancel noise
+                nodedata['temperature'] = round(nodedata['temperature'], 1)
+                nodedata['humidity'] = round(nodedata['humidity'], 1)
         master[nodename] = nodedata
  
         #
