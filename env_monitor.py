@@ -37,9 +37,10 @@ def main():
                 nodedata['route'].update(mnode['route'])
                 if nodedata['signal'] < mnode['signal']:
                     nodedata['signal'] = mnode['signal']
-            # cancel noise
-            nodedata['temperature'] = round((mnode['temperature'] + nodedata['temperature'])/2, 2)
-            nodedata['humidity'] = round((mnode['humidity'] + nodedata['humidity'])/2, 2)
+            else:
+                # update node : cancel noise
+                nodedata['temperature'] = round((mnode['temperature'] + nodedata['temperature'])/2, 2)
+                nodedata['humidity'] = round((mnode['humidity'] + nodedata['humidity'])/2, 2)
         master[nodename] = nodedata
  
         #
