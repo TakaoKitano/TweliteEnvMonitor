@@ -32,11 +32,14 @@ def main():
             # if we already have a same sequence data, 
             # merge route data
             #
-            node = master[nodename]
-            if node['sequence'] == nodedata['sequence']:
-                nodedata['route'].update(node['route'])
-                if nodedata['signal'] < node['signal']:
-                    nodedata['signal'] = node['signal']
+            mnode = master[nodename]
+            if mnode['sequence'] == nodedata['sequence']:
+                nodedata['route'].update(mnode['route'])
+                if nodedata['signal'] < mnode['signal']:
+                    nodedata['signal'] = mnode['signal']
+            # cancel noise
+            nodedata['temperature'] = round((mnode['temperature'] + nodedata['temperature'])/2, 2)
+            nodedata['humidity'] = round((mnode['humidity'] + nodedata['humidity'])/2, 2)
         master[nodename] = nodedata
  
         #
